@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Formik, Form } from 'formik';
 import * as yup from 'yup'; 
-import { Button, Container, MenuItem, Select, TextField, Typography, Box, InputLabel, Card, CardContent, CardActions, FormControl, FormHelperText, InputAdornment, IconButton, FilledInput } from '@material-ui/core';
+import { Button, Container, MenuItem, Select, TextField, Typography, InputLabel, Card, CardContent, CardActions, FormControl, FormHelperText, InputAdornment, IconButton, FilledInput } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import {Visibility , VisibilityOff} from '@material-ui/icons';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 const styles = (theme) => ({
   root: {
@@ -11,46 +11,77 @@ const styles = (theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    '& > *': {
-      margin: theme.spacing(2),
-    },
-  },
-  cardAction: {
-    margin: theme.spacing(2),
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  textField: {
-    margin: theme.spacing(2),
-    flex: '1 1 48%',
-    [theme.breakpoints.down('sm')]: {
-      flex: '1 1 100%',
-    },
-  },
-  fullWidthField: {
-    margin: theme.spacing(2),
-    width: '100%',
-  },
-  select: {
-    margin: theme.spacing(2),
-    flex: '1 1 48%',
-    [theme.breakpoints.down('sm')]: {
-      flex: '1 1 100%',
-    },
+    minHeight: '20vh',
+    padding: theme.spacing(2),
+    backgroundColor: theme.palette.background.default,
+    WebkitAppearance: 'none',
+    MozAppearance: 'none',
+    MsAppearance: 'none',
   },
   card: {
-    minWidth: 275,
+    width: '100%',
+    maxWidth: 500,
+    borderRadius: 12,
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+    backgroundColor: '#fff',
+    padding: theme.spacing(2),
+    
   },
   form: {
     display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
+  },
+  textFieldPair: {
+    display: 'flex',
+    gap: theme.spacing(2),
     flexWrap: 'wrap',
-    padding: theme.spacing(2),
+  },
+  textField: {
+    flex: '1 1 48%',
+    marginBottom: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      flex: '1 1 100%',
+    },
+    WebkitAppearance: 'none',
+    MozAppearance: 'none',
+    MsAppearance: 'none',
+  },
+  select: {
+    flex: '1 1 48%',
+    marginBottom: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      flex: '1 1 100%',
+    },
+  },
+  addressField: {
+    width: '100%',
+    marginBottom: theme.spacing(2),
+  },
+  actionButton: {
+    marginTop: theme.spacing(3),
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  submitButton: {
+    width: '100%',
+    borderRadius: 8,
+    padding: theme.spacing(1.5),
+    fontWeight: 'bold',
+    transition: 'background-color 0.3s, transform 0.2s',
+    '&:hover': {
+      backgroundColor: theme.palette.primary.dark,
+      transform: 'scale(1.05)',
+    },
+  },
+  title: {
+    fontWeight: 700,
+    marginBottom: theme.spacing(2),
+    textAlign: 'center',
   },
 });
 
 class RegistrationForm extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -63,49 +94,51 @@ class RegistrationForm extends Component {
         address: '',
         confirmPassword: ''
       },
-			showPassword: {
-				password: false,
-				confirmPassword: false
-			},
+      showPassword: {
+        password: false,
+        confirmPassword: false
+      },
     };
     this.validationSchema = yup.object().shape({
-      firstName: yup.string("Enter Your First Name").required('First Name is required'),
-      lastName: yup.string("Enter Your Last Name").required('Last Name is required'),
-      email: yup.string("Enter Your Email Address").email('Invalid email').required('Email is required'),
-      password: yup.string("Enter Your Password").required('Password is required').min(8, 'Password must be at least 8 characters').max(16, 'Password must be at most 16 characters'),
-      gender: yup.string("Select Your Gender").required('Gender is required'),
-      address: yup.string("Enter Your Address").required('Address is required'),
-      confirmPassword: yup.string("Confirm Your Password").required('Confirm Password is required').oneOf([yup.ref('password'), null], 'Passwords must match')
+      firstName: yup.string().required('First Name is required'),
+      lastName: yup.string().required('Last Name is required'),
+      email: yup.string().email('Invalid email').required('Email is required'),
+      password: yup.string().required('Password is required').min(8, 'Password must be at least 8 characters').max(16, 'Password must be at most 16 characters'),
+      gender: yup.string().required('Gender is required'),
+      address: yup.string().required('Address is required'),
+      confirmPassword: yup.string().required('Confirm Password is required').oneOf([yup.ref('password'), null], 'Passwords must match')
     });
   }
 
   handleSubmit = (values) => {
-    this.setState({ initialValues: values });    
+    this.setState({ initialValues: values });
   }
 
-	handleClickShowPassword = (field) => {
-		this.setState({ showPassword: { ...this.state.showPassword, [field]: !this.state.showPassword[field] } });
-	}
+  handleClickShowPassword = (field) => {
+    this.setState({ showPassword: { ...this.state.showPassword, [field]: !this.state.showPassword[field] } });
+  }
 
-	handleMouseDownPassword = (event) => {
-		event.preventDefault();
-	}
+  handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  }
 
   renderForm = () => {
     const { classes } = this.props;
     return (
-      <Container maxWidth='sm'>
-        <Box className={classes.root}>
-          <Card className={classes.card}>
-            <CardContent>        
-              <Formik
-                initialValues={this.state.initialValues}
-                validationSchema={this.validationSchema}
-                onSubmit={this.handleSubmit}
-              >
-                {({ values, handleChange, handleSubmit, errors, touched }) => (
-                  <Form onSubmit={handleSubmit} className={classes.form}>
-                    <Typography variant="h4" align="center">Registration Form</Typography>
+      <Container maxWidth='sm' className={classes.root}>
+        <Card className={classes.card}>
+          <CardContent>
+            <Typography variant="h4" className={classes.title}>
+              Registration Form
+            </Typography>
+            <Formik
+              initialValues={this.state.initialValues}
+              validationSchema={this.validationSchema}
+              onSubmit={this.handleSubmit}
+            >
+              {({ values, handleChange, handleSubmit, errors, touched }) => (
+                <Form onSubmit={handleSubmit} className={classes.form}>
+                  <div className={classes.textFieldPair}>
                     <FormControl variant="filled" className={classes.textField}>
                       <TextField
                         id="firstName"
@@ -116,8 +149,8 @@ class RegistrationForm extends Component {
                         error={touched.firstName && Boolean(errors.firstName)}
                         helperText={touched.firstName && errors.firstName}
                         variant="filled"
-                      />        
-                    </FormControl>      
+                      />
+                    </FormControl>
                     <FormControl variant="filled" className={classes.textField}>
                       <TextField
                         id="lastName"
@@ -128,8 +161,10 @@ class RegistrationForm extends Component {
                         error={touched.lastName && Boolean(errors.lastName)}
                         helperText={touched.lastName && errors.lastName}
                         variant="filled"
-                      />        
+                      />
                     </FormControl>
+                  </div>
+                  <div className={classes.textFieldPair}>
                     <FormControl variant="filled" className={classes.textField}>
                       <TextField
                         id="email"
@@ -157,76 +192,77 @@ class RegistrationForm extends Component {
                       </Select>
                       {touched.gender && <FormHelperText>{errors.gender}</FormHelperText>}
                     </FormControl>
-                    <FormControl variant="filled" className={classes.fullWidthField}>
-                      <TextField
-                        id="address"
-                        name="address"
-                        label="Address"
-                        value={values.address}
-                        onChange={handleChange}
-                        error={touched.address && Boolean(errors.address)}
-                        helperText={touched.address && errors.address}
-                        variant="filled"
-                      />
-                    </FormControl>
+                  </div>
+                  <FormControl variant="filled" className={classes.addressField}>
+                    <TextField
+                      id="address"
+                      name="address"
+                      label="Address"
+                      value={values.address}
+                      onChange={handleChange}
+                      error={touched.address && Boolean(errors.address)}
+                      helperText={touched.address && errors.address}
+                      variant="filled"
+                    />
+                  </FormControl>
+                  <div className={classes.textFieldPair}>
                     <FormControl variant="filled" className={classes.textField} error={touched.password && Boolean(errors.password)}>
-											<InputLabel htmlFor="password">Password</InputLabel>
+                      <InputLabel htmlFor="password">Password</InputLabel>
                       <FilledInput
                         id="password"
                         name="password"
-                        label="Password"
                         type={this.state.showPassword.password ? 'text' : 'password'}
                         value={values.password}
-                        onChange={handleChange}                                                
-                        variant="filled"
-												endAdornment={
-													<InputAdornment position="end">
-														<IconButton
-															aria-label="toggle password visibility"
-															edge="end"
-															onClick={()=>this.handleClickShowPassword('password')}
-															onMouseDown={() => this.handleMouseDownPassword}
-														>
-														{this.state.showPassword.password ? <Visibility /> : <VisibilityOff />}
-														</IconButton>
-													</InputAdornment>
-												}
-                      />       
-											{touched.password && <FormHelperText>{errors.password}</FormHelperText>}
+                        onChange={handleChange}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              edge="end"
+                              onClick={() => this.handleClickShowPassword('password')}
+                              onMouseDown={this.handleMouseDownPassword}
+                            >
+                              {this.state.showPassword.password ? <Visibility /> : <VisibilityOff />}
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                      />
+                      {touched.password && <FormHelperText>{errors.password}</FormHelperText>}
                     </FormControl>
                     <FormControl variant="filled" className={classes.textField} error={touched.confirmPassword && Boolean(errors.confirmPassword)}>
-											<InputLabel htmlFor="confirmPassword">Confirm Password</InputLabel>
-											<FilledInput
+                      <InputLabel htmlFor="confirmPassword">Confirm Password</InputLabel>
+                      <FilledInput
                         id="confirmPassword"
-                        name="confirmPassword"                        
+                        name="confirmPassword"
                         type={this.state.showPassword.confirmPassword ? 'text' : 'password'}
                         value={values.confirmPassword}
-                        onChange={handleChange}                        
-                        variant="filled"
-												endAdornment={
-													<InputAdornment position="end">
-														<IconButton
-															aria-label="toggle password visibility"
-															edge="end"
-															onClick={()=>this.handleClickShowPassword('confirmPassword')}
-															onMouseDown={() => this.handleMouseDownPassword}
-														>
-														{this.state.showPassword.confirmPassword ? <Visibility /> : <VisibilityOff />}
-														</IconButton>
-													</InputAdornment>
-												}
+                        onChange={handleChange}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              edge="end"
+                              onClick={() => this.handleClickShowPassword('confirmPassword')}
+                              onMouseDown={this.handleMouseDownPassword}
+                            >
+                              {this.state.showPassword.confirmPassword ? <Visibility /> : <VisibilityOff />}
+                            </IconButton>
+                          </InputAdornment>
+                        }
                       />
-											{touched.confirmPassword && <FormHelperText>{errors.confirmPassword}</FormHelperText>}
+                      {touched.confirmPassword && <FormHelperText>{errors.confirmPassword}</FormHelperText>}
                     </FormControl>
-                    <CardActions className={classes.cardAction}>
-                      <Button type="submit" variant="contained" color="primary">Submit</Button>
-                    </CardActions>
-                  </Form>
-                )}
-              </Formik>        
-            </CardContent>
-          </Card>
-        </Box>
+                  </div>
+                  <CardActions className={classes.actionButton}>
+                    <Button type="submit" variant="contained" color="primary" className={classes.submitButton}>
+                      Submit
+                    </Button>
+                  </CardActions>
+                </Form>
+              )}
+            </Formik>
+          </CardContent>
+        </Card>
       </Container>
     );
   }

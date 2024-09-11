@@ -1,38 +1,85 @@
 import React, { Component } from 'react';
-import { Box, Button, Container , Accordion , AccordionDetails , AccordionSummary} from '@material-ui/core';
+import { Box, Container, Accordion, AccordionDetails, AccordionSummary, Typography } from '@material-ui/core';
 import TodoList from './view/components/Todolist';
 import RegistrationForm from './view/components/RegistrationForm';
 import { withStyles } from '@material-ui/core/styles';
-import {ExpandMoreIcon} from '@material-ui/icons';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const styles = (theme) => ({
   root: {
-    '& > *': {
-      margin: theme.spacing(2),
-      paddingTop: theme.spacing(2),      
+    '& > *': {    
+      padding: theme.spacing(3),
       alignItems: 'center',
-      justifyContent: 'center',            
+      justifyContent: 'center',
+      maxWidth: '900px',
+      margin: '0 auto',
     },
   },
-  button: {
-    margin: theme.spacing(2),
-    backgroundColor: theme.palette.primary.main, 
-    color: theme.palette.common.white,
+  accordion: {
+    width: '100%',
+    marginBottom: theme.spacing(2),
+    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+    borderRadius: '8px',
+    transition: 'all 0.3s ease-in-out',
+    '&:hover': {
+      transform: 'scale(1.02)',
+      boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.2)',
+    },
+  },
+  heading: {
+    fontSize: theme.typography.pxToRem(18),
+    fontWeight: 600,
+    color: theme.palette.primary.main,
+    flexBasis: '33.33%',
+    textAlign: 'left', 
+  },
+  secondaryHeading: {
+    fontSize: theme.typography.pxToRem(14),
+    color: theme.palette.text.secondary,
+    flexBasis: '33.33%', 
+    textAlign: 'center', 
+  },
+  expandIcon: {
+    marginLeft: 'auto',
+    flexBasis: '33.33%',
+    textAlign: 'right', 
+  },
+  accordionSummary: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '0 16px',
+  },
+  accordionDetails: {
+    backgroundColor: theme.palette.background.default,
+    padding: theme.spacing(3),
+    borderTop: `1px solid ${theme.palette.divider}`,
+    display: 'flex', 
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center', 
+  },
+  container: {
+    padding: theme.spacing(5),
+    backgroundColor: '#f4f6f8',
+    borderRadius: '12px',
+    boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.1)',
   },
 });
 
 class App extends Component {
   state = {
-    task :[
-       {
+    task: [
+      {
         open: false,
-        label : "Todo List",
-        taskName : 'todoList',
+        label: "Todo List",
+        taskName: 'todoList',
+        secondaryText: 'Basic Todo List with CRUD and MUI 4 style',
       },
-       {
+      {
         open: false,
-        label : "Registration Form",
-        taskName : 'registrationForm',
+        label: "Registration Form",
+        taskName: 'registrationForm',
+        secondaryText: 'Registration Form with Formik and Yup',
       },
     ]
   };
@@ -40,35 +87,37 @@ class App extends Component {
   handleClick = (index) => {    
     let task = this.state.task;
     task[index].open = !task[index].open;
-    this.setState({ task });    
+    this.setState({ task });
   }
 
   render() {
-    const { classes } = this.props; 
+    const { classes } = this.props;
     return (
-      <Container>
-          <div className={classes.root}>
-          <h1>React Class Based Components Tutorials</h1>
+      <Container className={classes.container}>
+        <div className={classes.root}>
+          <Typography variant="h4" align="center" gutterBottom style={{ fontWeight: 700, color: '#333' }}>
+            React Class Based Components Tutorials
+          </Typography>
           <Box>
             {this.state.task.map((item, index) => (
-                <Box>
-                  <Button variant="contained" color="primary" onClick={() => this.handleClick(index)}  className={classes.button}  >
-                    {item.label}
-                  </Button>
-                  {item.open === true && (
-                    <div className={item.label}>                      
-                      {item.taskName === 'todoList' && <TodoList />}
-                      {item.taskName === 'registrationForm' && <RegistrationForm />}
-                    </div>
-                  )}
-                </Box>              
-              ))}         
+              <Accordion key={index} expanded={item.open} onChange={() => this.handleClick(index)} className={classes.accordion}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} className={classes.accordionSummary}>
+                  <Typography className={classes.heading}>{item.label}</Typography>
+                  <Typography className={classes.secondaryHeading}>{item.secondaryText}</Typography>                  
+                </AccordionSummary>
+                <AccordionDetails className={classes.accordionDetails}>
+                  <div>
+                    {item.taskName === 'todoList' && <TodoList />}
+                    {item.taskName === 'registrationForm' && <RegistrationForm />}
+                  </div>
+                </AccordionDetails>
+              </Accordion>
+            ))}
           </Box>
-      </div>
-        </Container>
+        </div>
+      </Container>
     );
   }
 }
 
 export default withStyles(styles)(App);
-
