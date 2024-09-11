@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { Formik, Form } from 'formik';
 import * as yup from 'yup'; 
-import { Button, Container, MenuItem, Select, TextField, Typography, Box, InputLabel, Card, CardContent, CardActions, FormControl, FormHelperText, InputAdornment, IconButton } from '@material-ui/core';
+import { Button, Container, MenuItem, Select, TextField, Typography, Box, InputLabel, Card, CardContent, CardActions, FormControl, FormHelperText, InputAdornment, IconButton, FilledInput } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import {Visibility , VisibilityOff} from '@material-ui/icons';
-
 
 const styles = (theme) => ({
   root: {
@@ -170,16 +169,15 @@ class RegistrationForm extends Component {
                         variant="filled"
                       />
                     </FormControl>
-                    <FormControl variant="filled" className={classes.textField}>
-                      <TextField
+                    <FormControl variant="filled" className={classes.textField} error={touched.password && Boolean(errors.password)}>
+											<InputLabel htmlFor="password">Password</InputLabel>
+                      <FilledInput
                         id="password"
                         name="password"
                         label="Password"
-                        type="password"
+                        type={this.state.showPassword.password ? 'text' : 'password'}
                         value={values.password}
-                        onChange={handleChange}
-                        error={touched.password && Boolean(errors.password)}
-                        helperText={touched.password && errors.password}
+                        onChange={handleChange}                                                
                         variant="filled"
 												endAdornment={
 													<InputAdornment position="end">
@@ -194,19 +192,31 @@ class RegistrationForm extends Component {
 													</InputAdornment>
 												}
                       />       
+											{touched.password && <FormHelperText>{errors.password}</FormHelperText>}
                     </FormControl>
-                    <FormControl variant="filled" className={classes.textField}>
-                      <TextField
+                    <FormControl variant="filled" className={classes.textField} error={touched.confirmPassword && Boolean(errors.confirmPassword)}>
+											<InputLabel htmlFor="confirmPassword">Confirm Password</InputLabel>
+											<FilledInput
                         id="confirmPassword"
-                        name="confirmPassword"
-                        label="Confirm Password"
-                        type="password"
+                        name="confirmPassword"                        
+                        type={this.state.showPassword.confirmPassword ? 'text' : 'password'}
                         value={values.confirmPassword}
-                        onChange={handleChange}
-                        error={touched.confirmPassword && Boolean(errors.confirmPassword)}
-                        helperText={touched.confirmPassword && errors.confirmPassword}
+                        onChange={handleChange}                        
                         variant="filled"
+												endAdornment={
+													<InputAdornment position="end">
+														<IconButton
+															aria-label="toggle password visibility"
+															edge="end"
+															onClick={()=>this.handleClickShowPassword('confirmPassword')}
+															onMouseDown={() => this.handleMouseDownPassword}
+														>
+														{this.state.showPassword.confirmPassword ? <Visibility /> : <VisibilityOff />}
+														</IconButton>
+													</InputAdornment>
+												}
                       />
+											{touched.confirmPassword && <FormHelperText>{errors.confirmPassword}</FormHelperText>}
                     </FormControl>
                     <CardActions className={classes.cardAction}>
                       <Button type="submit" variant="contained" color="primary">Submit</Button>

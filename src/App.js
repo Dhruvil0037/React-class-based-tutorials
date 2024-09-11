@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Box, Button, Container } from '@material-ui/core';
+import { Box, Button, Container , Accordion , AccordionDetails , AccordionSummary} from '@material-ui/core';
 import TodoList from './view/components/Todolist';
 import RegistrationForm from './view/components/RegistrationForm';
 import { withStyles } from '@material-ui/core/styles';
+import {ExpandMoreIcon} from '@material-ui/icons';
 
 const styles = (theme) => ({
   root: {
@@ -22,13 +23,25 @@ const styles = (theme) => ({
 
 class App extends Component {
   state = {
-    todoList: false,
-    registrationForm: false,
+    task :[
+       {
+        open: false,
+        label : "Todo List",
+        taskName : 'todoList',
+      },
+       {
+        open: false,
+        label : "Registration Form",
+        taskName : 'registrationForm',
+      },
+    ]
   };
 
-  handleClick = (field) => {
-    this.setState({ [field]: !this.state[field] });
-  };
+  handleClick = (index) => {    
+    let task = this.state.task;
+    task[index].open = !task[index].open;
+    this.setState({ task });    
+  }
 
   render() {
     const { classes } = this.props; 
@@ -37,26 +50,19 @@ class App extends Component {
           <div className={classes.root}>
           <h1>React Class Based Components Tutorials</h1>
           <Box>
-            <Box >
-              <Button variant="contained" color="primary" onClick={() => this.handleClick("todoList")}  className={classes.button}  >
-                Todo List
-              </Button>
-              {this.state.todoList === true && (
-                <div className='TodoList'>
-                  <TodoList />
-                </div>
-              )}
-            </Box>
-            <Box >
-              <Button variant="contained" color="primary" onClick={() => this.handleClick("registrationForm")} className={classes.button} >
-                Registration Form
-              </Button>
-              {this.state.registrationForm === true && (
-                <div className='RegistrationForm'>
-                  <RegistrationForm />
-                </div>
-              )}
-            </Box>
+            {this.state.task.map((item, index) => (
+                <Box>
+                  <Button variant="contained" color="primary" onClick={() => this.handleClick(index)}  className={classes.button}  >
+                    {item.label}
+                  </Button>
+                  {item.open === true && (
+                    <div className={item.label}>                      
+                      {item.taskName === 'todoList' && <TodoList />}
+                      {item.taskName === 'registrationForm' && <RegistrationForm />}
+                    </div>
+                  )}
+                </Box>              
+              ))}         
           </Box>
       </div>
         </Container>
