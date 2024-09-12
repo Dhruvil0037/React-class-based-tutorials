@@ -4,6 +4,7 @@ import TodoList from './view/components/Todolist';
 import RegistrationForm from './view/components/RegistrationForm';
 import { withStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import PocketTaxView from './view/pages/PocketTaxView';
 
 const styles = (theme) => ({
   root: {
@@ -81,6 +82,12 @@ class App extends Component {
         taskName: 'registrationForm',
         secondaryText: 'Registration Form with Formik and Yup',
       },
+      {
+        open: false,
+        label: "Pocket Tax",
+        taskName: 'pocketTax',
+        secondaryText: 'Prop drilling ',
+      }
     ]
   };
 
@@ -109,10 +116,12 @@ class App extends Component {
                   <div>
                     {item.taskName === 'todoList' && <TodoList />}
                     {item.taskName === 'registrationForm' && <RegistrationForm />}
+                    {item.taskName === 'pocketTax' && <PocketTaxView />}
                   </div>
                 </AccordionDetails>
               </Accordion>
             ))}
+            
           </Box>
         </div>
       </Container>
