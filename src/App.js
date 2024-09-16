@@ -86,7 +86,7 @@ class App extends Component {
         open: false,
         label: "Pocket Tax",
         taskName: 'pocketTax',
-        secondaryText: 'Prop drilling ',
+        secondaryText: 'Prop drilling & Controller Component',
       }
     ]
   };
